@@ -1,11 +1,31 @@
 @startuml
 
-note "Requerimiento: Crear un reproductor de audio" as Requerimiento1
+note "Requerimiento: Crear un reproductor de audio\nRequerimiento: Poder elegir el fichero a reproducir" as Requerimiento1
 
 class Player {
+    var bytes: [Byte]
+    --
+    init(bytes: [Byte]
+    --
     - Envía stream de bytes al sistema de audio
 }
 
-note "Tradeoff: El audio a reproducir está almacenado en un array de bytes en local" as Tradeoff1
+class FileSelector {
+    - Permite al usuario elegir un fichero
+}
+
+class FileReader {
+    - Convierte un fichero en un array de bytes
+}
+
+class App {
+    - Inicializa los sistemas necesarios
+}
+
+App .. FileSelector
+App .. FileReader
+App .. Player
+
+note "Consideraciones: la clase FileSelector presenta una ventana para elegir el fichero" as Consideracion1
 
 @enduml
