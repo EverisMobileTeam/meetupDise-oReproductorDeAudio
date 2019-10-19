@@ -1,0 +1,11 @@
+@startuml
+
+note "Requerimiento: Crear un reproductor de audio" as Requerimiento1
+
+class Player {
+    - Envía stream de bytes al sistema de audio
+}
+
+note "Tradeoff: El audio a reproducir está almacenado en un array de bytes en local" as Tradeoff1
+
+@enduml
