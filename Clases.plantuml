@@ -5,6 +5,7 @@ note as Requerimientos
     - Crear un reproductor de audio
     - Poder elegir el fichero a reproducir
     - Poder pausar y reanudar la reproducción
+    - Poder reproducir una lista de audios
 end note 
 
 note as Consideraciones
@@ -31,6 +32,7 @@ class Playback {
     - Guarda la posición de reproducción
     - Monitoriza el estado
     - Envía streams de bytes al reproductor dependiendo del estado
+    - Notifica cuando se han reproducido todos los chunks
 }
 
 class FileSelector {
@@ -58,14 +60,40 @@ class ViewPresenter {
     - Responde a los eventos de los controles
 }
 
-App .. FileSelector
-App .. FileMapper
-App .. Playback
+class Playlist {
+    addFile(file: File)
+    removeFile(file: File)
+    obtainFileToPlay() -> File
+    --
+    - Almacena un listado de ficheros
+    - Permite gestionar los ficheros de la lista
+    - Guarda el fichero actual que se está reproduciendo
+    - Obtiene el siguiente fichero a reproducir
+}
+
+class PlaylistPlayer {
+    play()
+    pause()
+    --
+    - Obtiene el fichero a reproducir desde la playlist
+    - Convierte el fichero al formato reproducible
+    - Gestiona la reproducción de cada fichero
+    - Propaga eventos relacionados con la reproducción - play y pause
+    - Monitoriza cuando un fichero ha terminado de reproducirse
+}
+
 App .. ViewPresenter
+App .. Playlist
+App .. PlaylistPlayer
 Playback .. Player
-FileMapper .. Chunk
 Playback .. Chunk
-ViewPresenter .. Playback
+FileMapper .. Chunk
+ViewPresenter .. Playlist
+ViewPresenter .. FileSelector
+ViewPresenter .. PlaylistPlayer
+PlaylistPlayer .. Playlist
+PlaylistPlayer .. FileMapper
+PlaylistPlayer .. Playback
 
 App .. Requerimientos
 FileSelector .. Consideraciones
