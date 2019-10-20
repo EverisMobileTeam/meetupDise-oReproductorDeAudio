@@ -7,20 +7,28 @@ note as Requerimientos
     - Poder pausar y reanudar la reproducción
 end note 
 
+note as Consideraciones
+    Consideraciones:
+    - La clase FileSelector presenta una ventana para elegir el fichero
+end note
+
+note as Tradeoffs
+    Tradeoffs:
+    - La clase Chunk es dependiente del sistema, es posible que el tamaño mínimo de buffer varíe
+end note
+
 class Player {
-    play(bytes: 
+    play(bytes: [Byte])
+    --
     - Envía stream de bytes al sistema de audio
 }
 
 class Playback {
-    var bytes: [Byte]
-    var isPlaying: Bool
-    --
-    init(bytes: [Byte])
+    init(chunks: [Chunk])
     play()
     pause()
     --
-    - Divide el array de bytes en bloques o chunks reproducibles
+    - Guarda la posición de reproducción
     - Monitoriza el estado
     - Envía streams de bytes al reproductor dependiendo del estado
 }
@@ -29,22 +37,38 @@ class FileSelector {
     - Permite al usuario elegir un fichero
 }
 
-class FileReader {
-    - Convierte un fichero en un array de bytes
+class FileMapper {
+    - Convierte un fichero en un array de chunks reproducibles
 }
 
 class App {
     - Inicializa los sistemas necesarios
 }
 
-App .. FileSelector
-App .. FileReader
-App .. Playback
-Playback .. Player
+class Chunk {
+    var bytes: [Byte]
+    --
+    init(bytes: [Byte])
+    --
+    - Almacena un array de bytes que se puede enviar al reproductor
+}
 
-note as Consideraciones
-    Consideraciones:
-    - La clase FileSelector presenta una ventana para elegir el fichero
-end note
+class ViewPresenter {
+    - Presenta las vistas y controles
+    - Responde a los eventos de los controles
+}
+
+App .. FileSelector
+App .. FileMapper
+App .. Playback
+App .. ViewPresenter
+Playback .. Player
+FileMapper .. Chunk
+Playback .. Chunk
+ViewPresenter .. Playback
+
+App .. Requerimientos
+FileSelector .. Consideraciones
+Chunk .. Tradeoffs
 
 @enduml
