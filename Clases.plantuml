@@ -6,6 +6,8 @@ note as Requerimientos
     - Poder elegir el fichero a reproducir
     - Poder pausar y reanudar la reproducción
     - Poder reproducir una lista de audios
+    - Poder reproducir en bucle una canción
+    - Poder reproducir aleatoriamente los audios
 end note 
 
 note as Consideraciones
@@ -64,11 +66,15 @@ class Playlist {
     addFile(file: File)
     removeFile(file: File)
     obtainFileToPlay() -> File
+    setLooping(looping: Bool)
+    setShuffle(shuffle: Bool)
     --
     - Almacena un listado de ficheros
     - Permite gestionar los ficheros de la lista
     - Guarda el fichero actual que se está reproduciendo
     - Obtiene el siguiente fichero a reproducir
+    - Controla el estado de repetición
+    - Controla el estado de reproducción aleatoria
 }
 
 class PlaylistPlayer {
@@ -80,6 +86,10 @@ class PlaylistPlayer {
     - Gestiona la reproducción de cada fichero
     - Propaga eventos relacionados con la reproducción - play y pause
     - Monitoriza cuando un fichero ha terminado de reproducirse
+}
+
+class PlaylistShuffler {
+    - Obtiene un indice aleatorio
 }
 
 App .. ViewPresenter
@@ -94,6 +104,7 @@ ViewPresenter .. PlaylistPlayer
 PlaylistPlayer .. Playlist
 PlaylistPlayer .. FileMapper
 PlaylistPlayer .. Playback
+Playlist .. PlaylistShuffler
 
 App .. Requerimientos
 FileSelector .. Consideraciones
